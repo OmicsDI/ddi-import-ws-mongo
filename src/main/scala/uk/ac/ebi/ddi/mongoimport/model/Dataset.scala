@@ -18,6 +18,4 @@ case class Dataset (additional: Map[String, Set[String]],
 )
 
 case class Scores()
-case class Entry()
 
-//class DatasetDAO extends SalatDAO[Dataset, ObjectId](collection= MongoConnection()("chocolate_base")("chocolate"))
