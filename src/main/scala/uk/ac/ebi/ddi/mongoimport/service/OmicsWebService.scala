@@ -11,18 +11,18 @@ import sttp.model.Uri
 class OmicsWebService extends WSTrait{
 
   def getOmicsDataset(): Unit ={
-      for(i <- 0 to getDatasetPageCount()){
-      insertPageDataset(i)
+      val pageData = getJsonDatasetByDB(0, 20, "Pride")
+      for(i <- 0 to getDatasetPageCount(0, 20, pageData)){
+      insertPageDataset(i, 20, pageData)
     }
   }
-
-  def getDatasetPageCount(start:Int = 0, size:Int = 20, f: (Int, Int) => DatasetPage): Int ={
-    val data = getJsonDataset(start, size)
+  //getJsonDataset(start, size)
+  def getDatasetPageCount(start:Int = 0, size:Int = 20, page:DatasetPage): Int ={
+    val data = page
     data.totalPages
   }
 
-  def insertPageDataset(start:Int=0, size: Int=20): Unit ={
-    val data = getJsonDataset(start, size)
+  def insertPageDataset(start:Int=0, size: Int=20, data: DatasetPage): Unit ={
     println(data.content(0).accession)
     implicit val formats = DefaultFormats
     for( i <- 0 to size -1 ){
