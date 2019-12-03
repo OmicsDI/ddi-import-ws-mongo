@@ -32,30 +32,10 @@ class OmicsWebService extends WSTrait{
 
   def getJsonDataset(start:Int, size:Int ): DatasetPage ={
     getResponse[DatasetPage](uri"https://www.omicsdi.org:443/ws/dataset/getDatasetPage?start=$start&size=$size")
-    /*val request = basicRequest.get(
-      uri"https://www.omicsdi.org:443/ws/dataset/getDatasetPage?start=$start&size=$size")
-
-    implicit val backend = HttpURLConnectionBackend()
-    val response = request.send()
-
-    implicit val formats = DefaultFormats
-    val json = parse(response.body.getOrElse("{}"))
-    val data = json.extract[DatasetPage]
-    data*/
   }
 
   def getJsonDatabase(start:Int, size:Int ): Database ={
     getResponse[Database](uri"https://www.omicsdi.org:443/ws/database/all")
-    /*val request = basicRequest.get(
-      uri"https://www.omicsdi.org:443/ws/database/all")
-
-    implicit val backend = HttpURLConnectionBackend()
-    val response = request.send()
-
-    implicit val formats = DefaultFormats
-    val json = parse(response.body.getOrElse("{}"))
-    val data = json.extract[Database]
-    data*/
   }
 
   def getResponse[T: Manifest](url:Uri): T ={
