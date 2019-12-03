@@ -16,7 +16,7 @@ class OmicsWebService extends WSTrait{
     }
   }
 
-  def getDatasetPageCount(start:Int = 0, size:Int = 20): Int ={
+  def getDatasetPageCount(start:Int = 0, size:Int = 20, f: (Int, Int) => DatasetPage): Int ={
     val data = getJsonDataset(start, size)
     data.totalPages
   }
@@ -34,8 +34,12 @@ class OmicsWebService extends WSTrait{
     getResponse[DatasetPage](uri"https://www.omicsdi.org:443/ws/dataset/getDatasetPage?start=$start&size=$size")
   }
 
-  def getJsonDatabase(start:Int, size:Int ): Database ={
+  def getJsonDatabase(): Database ={
     getResponse[Database](uri"https://www.omicsdi.org:443/ws/database/all")
+  }
+
+  def getJsonDatasetByDB(start:Int, size:Int, database: String ): DatasetPage ={
+    getResponse[DatasetPage](uri"http://localhost:8080/dataset/getDatasetByDB?database=$database&start=$start&size=$size")
   }
 
   def getResponse[T: Manifest](url:Uri): T ={
