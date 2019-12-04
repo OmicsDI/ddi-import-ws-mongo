@@ -9,13 +9,21 @@ import sttp.model.Uri
 
 
 class OmicsWebService extends WSTrait{
+  implicit val formats = DefaultFormats
 
-  def getOmicsDataset(): Unit ={
+  def saveOmicsDataset(): Unit ={
       val pageData = getJsonDatasetByDB(0, 20, "Pride")
       for(i <- 0 to getDatasetPageCount(0, 20, pageData)){
       insertPageDataset(i, 20, pageData)
     }
   }
+
+  def saveOmicsDatabase(): Unit ={
+    val db = getJsonDatabase()
+    for(i <- 0 to db.length -1 )
+      MongoImportService.save(write(db(i)), MongoImportService.getDatabaseCollection())
+  }
+
   //getJsonDataset(start, size)
   def getDatasetPageCount(start:Int = 0, size:Int = 20, page:DatasetPage): Int ={
     val data = page
@@ -24,9 +32,8 @@ class OmicsWebService extends WSTrait{
 
   def insertPageDataset(start:Int=0, size: Int=20, data: DatasetPage): Unit ={
     println(data.content(0).accession)
-    implicit val formats = DefaultFormats
     for( i <- 0 to size -1 ){
-      MongoImportService.save(write(data.content(i)))
+      MongoImportService.save(write(data.content(i)),MongoImportService.getDatasetCollection())
     }
   }
 
@@ -34,8 +41,8 @@ class OmicsWebService extends WSTrait{
     getResponse[DatasetPage](uri"https://www.omicsdi.org:443/ws/dataset/getDatasetPage?start=$start&size=$size")
   }
 
-  def getJsonDatabase(): Database ={
-    getResponse[Database](uri"https://www.omicsdi.org:443/ws/database/all")
+  def getJsonDatabase(): Array[Database] ={
+    getResponse[Array[Database]](uri"https://www.omicsdi.org:443/ws/database/all")
   }
 
   def getJsonDatasetByDB(start:Int, size:Int, database: String ): DatasetPage ={
@@ -57,6 +64,7 @@ class OmicsWebService extends WSTrait{
 object OmicsWebService{
 
   def main(args:Array[String]): Unit ={
-    new OmicsWebService().getOmicsDataset()
+    //new OmicsWebService().saveOmicsDataset()
+    new OmicsWebService().saveOmicsDatabase()
   }
 }
