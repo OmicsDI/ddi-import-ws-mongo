@@ -11,13 +11,23 @@ object MongoImportService extends ImportServiceTrait {
   val database: MongoDatabase = mongoClient.getDatabase("mydb")
 
   // get a handle to the "test" collection
-  val collection: MongoCollection[Document] = database.getCollection("test")
+  //val collection: MongoCollection[Document] = database.getCollection("test")
 
-  def save(data:String): Unit ={
+  def getDatasetCollection():MongoCollection[Document] = {
+    database.getCollection("test")
+  }
+
+  def getDatabaseCollection():MongoCollection[Document] = {
+    database.getCollection("databases")
+  }
+
+
+  def save(data:String, collection: MongoCollection[Document]): Unit ={
     collection.insertOne(Document.apply(data)).subscribe(new Observer[Completed] {
       override def onNext(result: Completed): Unit = println(s"onNext: $result")
       override def onError(e: Throwable): Unit = println(s"onError: $e")
       override def onComplete(): Unit = println("onComplete")
     })
   }
+
 }
