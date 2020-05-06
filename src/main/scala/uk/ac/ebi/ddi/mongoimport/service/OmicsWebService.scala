@@ -21,7 +21,7 @@ class OmicsWebService extends WSTrait{
   def saveOmicsDatabase(): Unit ={
     val db = getJsonDatabase()
     for(i <- 0 to db.length -1 )
-      MongoImportService.save(write(db(i)), MongoImportService.getDatabaseCollection())
+      MongoImportService.save(write(db(i)), MongoConnection.getDatabaseCollection())
   }
 
   //getJsonDataset(start, size)
@@ -33,7 +33,8 @@ class OmicsWebService extends WSTrait{
   def insertPageDataset(start:Int=0, size: Int=20, data: DatasetPage): Unit ={
     println(data.content(0).accession)
     for( i <- 0 to size -1 ){
-      MongoImportService.save(write(data.content(i)),MongoImportService.getDatasetCollection())
+      data.content(i).database = "PrideTest"
+      MongoImportService.save(write(data.content(i)),MongoConnection.getDatasetCollection())
     }
   }
 
@@ -64,7 +65,7 @@ class OmicsWebService extends WSTrait{
 object OmicsWebService{
 
   def main(args:Array[String]): Unit ={
-    //new OmicsWebService().saveOmicsDataset()
-    new OmicsWebService().saveOmicsDatabase()
+    new OmicsWebService().saveOmicsDataset()
+    //new OmicsWebService().saveOmicsDatabase()
   }
 }
